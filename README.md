@@ -26,17 +26,6 @@ A hands-on DevOps portfolio project exploring repeatable infrastructure and appl
 
 Only list services and components here that you have personally configured or tested as the project progresses.
 
-## Repository layout
-
-```text
-.
-├── README.md
-└── docs/
-    └── Multi_Cloud_DevOps_Automation_Platform_Portfolio.pdf
-```
-
-Implementation folders such as `terraform/`, `jenkins/`, `docker/`, and `kubernetes/` can be added as the corresponding configurations are built and validated.
-
 ## Planned workflow
 1. Prepare a Linux development environment and install required tooling.
 2. Configure cloud access securely using least-privilege identities; do not commit credentials.
@@ -47,15 +36,6 @@ Implementation folders such as `terraform/`, `jenkins/`, `docker/`, and `kuberne
 7. Capture logs, test recovery steps, and document issues and resolutions.
 8. Clean up lab resources to avoid unnecessary cloud charges.
 
-## Getting started
-Review the [project portfolio PDF](docs/Multi_Cloud_DevOps_Automation_Platform_Portfolio.pdf) for the overview, architecture, representative commands, validation checklist, and interview summary.
-
-Before running cloud commands:
-- Install the relevant CLI tools and Terraform.
-- Configure credentials locally; never store access keys, kubeconfigs, tokens, or secrets in Git.
-- Review resource names, regions, permissions, and estimated costs.
-- Use a sandbox account and destroy temporary resources when finished.
-
 ## Security and cost notes
 - Use IAM roles / managed identities and least-privilege permissions.
 - Store secrets in an approved secret manager or CI/CD credential store.
@@ -63,7 +43,7 @@ Before running cloud commands:
 - Review cloud costs before provisioning and remove unused resources.
 
 ## Evidence and status
-Add screenshots, pipeline logs, Terraform plans (with secrets removed), and deployment manifests only after you have generated and verified them. Clearly label anything that is planned, simulated, or lab-tested.
+Add the portfolio PDF, screenshots, pipeline logs, Terraform plans (with secrets removed), and deployment manifests after generating and verifying them. Clearly label anything that is planned, simulated, or lab-tested.
 
 ## Author
 **Nishant Girase**  
