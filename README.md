@@ -20,10 +20,10 @@ The pipeline validates source code, runs tests, builds a Docker image and publis
 | Component | Implementation |
 |---|---|
 | Demo application | Python Flask health API |
-| Automated checks | GitHub Actions, pytest, Terraform format/validation |
-| Container | Docker multi-stage-ready slim Python image |
+| Automated checks | GitHub Actions, pytest, Docker build |
+| Container | Slim Python image running as a non-root user |
 | Orchestration | Kubernetes Deployment and Service manifests |
-| AWS example | Terraform VPC, public/private subnets and routing |
+| AWS example | Terraform VPC and public/private subnets |
 | Azure example | Terraform resource group, VNet and subnets |
 | Operations | Health endpoint, runbook and troubleshooting guide |
 | Interview prep | Architecture explanation and scenario questions |
@@ -106,7 +106,7 @@ Review the plan and configure required provider authentication before applying. 
 
 ## CI/CD workflow
 
-The GitHub Actions workflow runs application tests, builds the Docker image, and validates Terraform formatting/configuration. On pushes to the default branch it can publish the image to GitHub Container Registry (GHCR). It does **not** automatically provision cloud resources or deploy to a cluster; those steps require explicit environment credentials and configuration.
+The GitHub Actions workflow runs application tests and builds the Docker image. On pushes to the default branch it can publish the image to GitHub Container Registry (GHCR). It does **not** automatically provision cloud resources or deploy to a cluster; those steps require explicit environment credentials and configuration.
 
 ## Security checklist
 
