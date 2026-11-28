@@ -15,7 +15,7 @@ A practical portfolio lab demonstrating an application delivery workflow that ca
 
 The pipeline validates source code, runs tests, builds a Docker image and publishes it to GitHub Container Registry when changes are pushed to the default branch. The image can then be deployed to a Kubernetes cluster on Amazon EKS or Azure Kubernetes Service (AKS). Terraform examples are kept separate for AWS and Azure so each cloud can be reviewed and applied independently.
 
-## What is included
+## Featured AWS DevOps project\n\n[Open AWS EKS CI/CD Platform](aws-eks-cicd-platform/README.md) — a production-style personal lab with Jenkins, Docker, ECR, EKS, Terraform, Kubernetes operations, architecture diagrams, a runbook and interview preparation.\n\n## What is included
 
 | Component | Implementation |
 |---|---|
