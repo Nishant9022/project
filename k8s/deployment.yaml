@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-ops-demo
+  labels:
+    app: cloud-ops-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cloud-ops-demo
+  template:
+    metadata:
+      labels:
+        app: cloud-ops-demo
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/REPLACE_WITH_GITHUB_OWNER/cloud-ops-demo:latest
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 10001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-ops-demo
+spec:
+  selector:
+    app: cloud-ops-demo
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  type: ClusterIP
