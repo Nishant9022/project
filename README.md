@@ -1,50 +1,127 @@
 # Multi-Cloud DevOps Automation Platform
 
-A hands-on DevOps portfolio project exploring repeatable infrastructure and application delivery across AWS and Azure.
+![CI](https://github.com/Nishant9022/project/actions/workflows/ci.yml/badge.svg)
+![Docker](https://img.shields.io/badge/container-Docker-2496ED)
+![Kubernetes](https://img.shields.io/badge/orchestration-Kubernetes-326CE5)
+![Terraform](https://img.shields.io/badge/IaC-Terraform-7B42BC)
 
-> **Project status:** Portfolio/lab work in progress. This repository documents the intended architecture and learning workflow. It is not a claim of production deployment, customer usage, or measured business outcomes.
+A practical portfolio lab demonstrating an application delivery workflow that can be used with AWS or Azure infrastructure.
 
-## Objectives
-- Practice Infrastructure as Code with Terraform.
-- Build and understand CI/CD workflows with Jenkins.
-- Package applications with Docker.
-- Deploy and operate workloads with Kubernetes.
-- Explore cloud infrastructure patterns across AWS and Azure.
-- Document validation, troubleshooting, and operational practices.
+> **Honest project status:** This repository contains runnable application code, automated CI checks, container build instructions, Kubernetes manifests, Terraform examples, an architecture diagram and interview/runbook documentation. Cloud provisioning and cluster deployment must be performed in your own account; do not describe them as live production deployments until you have run and captured evidence.
 
-## Technology areas
+## Architecture
 
-| Area | Tools |
+![Multi-cloud delivery architecture](docs/architecture.svg)
+
+The pipeline validates source code, runs tests, builds a Docker image and publishes it to GitHub Container Registry when changes are pushed to the default branch. The image can then be deployed to a Kubernetes cluster on Amazon EKS or Azure Kubernetes Service (AKS). Terraform examples are kept separate for AWS and Azure so each cloud can be reviewed and applied independently.
+
+## What is included
+
+| Component | Implementation |
 |---|---|
-| Cloud | AWS, Microsoft Azure |
-| Infrastructure as Code | Terraform |
-| CI/CD | Jenkins |
-| Containers | Docker |
-| Orchestration | Kubernetes |
-| OS / scripting | Linux, shell |
-| Source control | Git, GitHub |
+| Demo application | Python Flask health API |
+| Automated checks | GitHub Actions, pytest, Terraform format/validation |
+| Container | Docker multi-stage-ready slim Python image |
+| Orchestration | Kubernetes Deployment and Service manifests |
+| AWS example | Terraform VPC, public/private subnets and routing |
+| Azure example | Terraform resource group, VNet and subnets |
+| Operations | Health endpoint, runbook and troubleshooting guide |
+| Interview prep | Architecture explanation and scenario questions |
 
-Only list services and components here that you have personally configured or tested as the project progresses.
+## Repository layout
 
-## Planned workflow
-1. Prepare a Linux development environment and install required tooling.
-2. Configure cloud access securely using least-privilege identities; do not commit credentials.
-3. Define infrastructure with Terraform and review the plan before applying changes.
-4. Build and tag an application container image with Docker.
-5. Run CI/CD stages in Jenkins (checkout, validation, build, test, image build, and deployment where configured).
-6. Deploy to a Kubernetes environment and validate rollout and service health.
-7. Capture logs, test recovery steps, and document issues and resolutions.
-8. Clean up lab resources to avoid unnecessary cloud charges.
+```text
+.
+├── app/                    # Flask demo service and tests
+├── k8s/                    # Kubernetes Deployment and Service
+├── terraform/
+│   ├── aws/                # AWS network foundation example
+│   └── azure/              # Azure network foundation example
+├── docs/
+│   ├── architecture.svg    # Architecture image
+│   ├── interview-guide.md  # Interview explanation and questions
+│   └── runbook.md          # Build, deploy, verify and troubleshoot
+├── .github/workflows/ci.yml
+├── Dockerfile
+└── requirements.txt
+```
 
-## Security and cost notes
-- Use IAM roles / managed identities and least-privilege permissions.
-- Store secrets in an approved secret manager or CI/CD credential store.
-- Keep state files and sensitive variable files out of version control.
-- Review cloud costs before provisioning and remove unused resources.
+## Run locally
 
-## Evidence and status
-Add the portfolio PDF, screenshots, pipeline logs, Terraform plans (with secrets removed), and deployment manifests after generating and verifying them. Clearly label anything that is planned, simulated, or lab-tested.
+Requirements: Python 3.11+ and Docker (optional for container testing).
+
+```bash
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+python app/app.py
+```
+
+Open `http://localhost:8080/health`. Expected response:
+
+```json
+{"status":"healthy","service":"cloud-ops-demo"}
+```
+
+Run tests:
+
+```bash
+pip install pytest
+pytest -q
+```
+
+Build and run the container:
+
+```bash
+docker build -t cloud-ops-demo:local .
+docker run --rm -p 8080:8080 cloud-ops-demo:local
+```
+
+## Kubernetes deployment
+
+After building and pushing an image to a registry accessible by your cluster, update the image in `k8s/deployment.yaml`, then run:
+
+```bash
+kubectl apply -f k8s/
+kubectl rollout status deployment/cloud-ops-demo
+kubectl get pods,svc
+kubectl port-forward svc/cloud-ops-demo 8080:80
+```
+
+Verify at `http://localhost:8080/health`. For a public service, add an ingress/load balancer only after reviewing your cloud costs and security rules.
+
+## Terraform examples
+
+AWS and Azure examples are intentionally independent:
+
+```bash
+cd terraform/aws   # or terraform/azure
+terraform init
+terraform fmt -check
+terraform validate
+terraform plan
+```
+
+Review the plan and configure required provider authentication before applying. These examples create billable cloud resources. Never commit credentials, state files or real `.tfvars` secrets. Run `terraform destroy` when the lab is no longer needed.
+
+## CI/CD workflow
+
+The GitHub Actions workflow runs application tests, builds the Docker image, and validates Terraform formatting/configuration. On pushes to the default branch it can publish the image to GitHub Container Registry (GHCR). It does **not** automatically provision cloud resources or deploy to a cluster; those steps require explicit environment credentials and configuration.
+
+## Security checklist
+
+- Use least-privilege IAM roles or Azure managed identities.
+- Store credentials in GitHub Actions Secrets or a cloud secret manager; never in source files.
+- Pin and review third-party GitHub Actions before production use.
+- Restrict Kubernetes RBAC and network access.
+- Scan images and dependencies before production use.
+- Keep Terraform state in a secured remote backend for team use.
+- Review cloud cost estimates before applying Terraform.
+
+## Interview preparation and evidence
+
+See [Interview Guide](docs/interview-guide.md) and [Operations Runbook](docs/runbook.md). Add your own screenshots of successful workflow runs, Docker output, Kubernetes resources and cloud resources after you execute the steps. Redact account IDs, IPs, tokens and other sensitive details.
 
 ## Author
-**Nishant Girase**  
-GitHub: [Nishant9022](https://github.com/Nishant9022)
+
+**Nishant Girase** · [GitHub Profile](https://github.com/Nishant9022)
