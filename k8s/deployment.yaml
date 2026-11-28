@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/REPLACE_WITH_GITHUB_OWNER/cloud-ops-demo:latest
+          image: ghcr.io/nishant9022/project/cloud-ops-demo:latest
           ports:
             - name: http
               containerPort: 8080
