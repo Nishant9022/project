@@ -1,0 +1,33 @@
+pipeline {
+  agent any
+  environment {
+    AWS_REGION = 'ap-south-1'
+    ECR_REPOSITORY = 'retail-api'
+    IMAGE_TAG = "${BUILD_NUMBER}"
+  }
+  stages {
+    stage('Checkout') { steps { checkout scm } }
+    stage('Unit Tests') {
+      steps {
+        sh 'python3 -m pip install -r app/requirements.txt'
+        sh 'python3 -m pytest -q app/tests'
+      }
+    }
+    stage('Build Image') {
+      steps { sh 'docker build -f docker/Dockerfile -t retail-api:${IMAGE_TAG} .' }
+    }
+    stage('Security Gate') {
+      steps { echo 'Add Trivy or your approved image scanner and fail on critical findings.' }
+    }
+    stage('Publish to ECR') {
+      when { branch 'main' }
+      steps {
+        echo 'Configure a least-privilege AWS role and ECR login before enabling image push.'
+      }
+    }
+  }
+  post {
+    always { cleanWs() }
+    failure { echo 'Build failed. Inspect the failed stage and logs before retrying.' }
+  }
+}
